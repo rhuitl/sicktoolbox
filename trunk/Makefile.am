@@ -1,5 +1,6 @@
 SUBDIRS=c++
 include aminclude.am
+ACLOCAL_AMFLAGS = -I m4
 MOSTLYCLEANFILES= $(DX_CLEANFILES)
 EXTRA_DIST= matlab/config_mex \
             matlab/build_mex \

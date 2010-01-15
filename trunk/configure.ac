@@ -5,6 +5,7 @@ AC_PREREQ(2.50)
 AC_INIT(SickToolbox,1.1,jasonder@seas.upenn.edu)
 AC_CONFIG_SRCDIR([c++/drivers/base/src/SickConfig.hh.in])
 AC_CONFIG_AUX_DIR(misc)
+AC_CONFIG_MACRO_DIR([m4])
 AM_INIT_AUTOMAKE
 AM_CONFIG_HEADER([c++/drivers/base/src/SickConfig.hh])
 	
