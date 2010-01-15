@@ -1,0 +1,12 @@
+Steps to start from fresh checkout:
+
+From top directory of a line of development (e.g. trunk):
+
+1. libtoolize (only required the first time)
+2. aclocal -I m4
+3. autoheader
+4. automake --add-missing (might need a -f flag before --add-missing, but I didn't)
+5. autoconf
+6. ./configure
+7. make
+8. sudo make install (only if you want to install them to default system lib paths and such)
