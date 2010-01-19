@@ -1,0 +1,8 @@
+Sick LIDAR Toolbox, forked for CWRU IGVC team
+
+Building trunk:
+	install autoconf, automake, libtool, m4
+	from trunk dir, run:
+		autoreconf -i
+		./configure
+		make
