@@ -6,3 +6,4 @@ Building trunk:
 		autoreconf -i
 		./configure
 		make
+		sudo make install
