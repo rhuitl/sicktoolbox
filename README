@@ -7,3 +7,5 @@ Building trunk:
 		./configure
 		make
 		sudo make install
+
+To link trunk against your own app after doing a sudo make install, you need to pass -lsicklms2xx as a link flag, not the one specified in the pdf manuals.
