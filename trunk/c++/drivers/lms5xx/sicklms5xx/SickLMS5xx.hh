@@ -289,10 +289,7 @@ namespace SickToolbox {
     void _requestDataStream( ) throw ( SickTimeoutException, SickConfigException, SickIOException );
     
     /** Start streaming measurements */
-    void _startStreamingMeasurements(  )throw( SickTimeoutException, SickIOException );
-
-    /** Stop streaming measurements */
-    void _stopStreamingMeasurements( const bool disp_banner = true ) throw( SickTimeoutException, SickIOException );
+    void _startStopStreamingMeasurements( bool start ) throw ( SickTimeoutException, SickIOException );
 
     /** Set device to measuring mode */
     void _checkForMeasuringStatus( unsigned int timeout_value = DEFAULT_SICK_LMS_5xx_STATUS_TIMEOUT ) throw( SickTimeoutException, SickIOException );

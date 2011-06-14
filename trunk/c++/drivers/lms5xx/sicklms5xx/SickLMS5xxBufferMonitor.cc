@@ -52,19 +52,19 @@ namespace SickToolbox {
       /* Search for STX in the byte stream */
       do {
 	
- 	/* Grab the next byte from the stream */
- 	_readBytes(&byte_buffer,1,DEFAULT_SICK_LMS_5xx_BYTE_TIMEOUT);
-	
+         /* Grab the next byte from the stream */
+         _readBytes(&byte_buffer,1,DEFAULT_SICK_LMS_5xx_BYTE_TIMEOUT);
+
       }
       while (byte_buffer != 0x02);
       
       /* Ok, now acquire the payload! (until ETX) */
       int payload_length = 0;
       do {
-	
-	payload_length++;
- 	_readBytes(&payload_buffer[payload_length-1],1,DEFAULT_SICK_LMS_5xx_BYTE_TIMEOUT);
-	
+
+        payload_length++;
+         _readBytes(&payload_buffer[payload_length-1],1,DEFAULT_SICK_LMS_5xx_BYTE_TIMEOUT);
+
       }
       while (payload_buffer[payload_length-1] != 0x03);
       payload_length--;
@@ -112,8 +112,8 @@ namespace SickToolbox {
       
       /* Capture a single byte from the stream! */
       if (read(_sick_fd,&null_byte,1) != 1) {
-	throw SickIOException("SickLMS5xxBufferMonitor::_flushTCPRecvBuffer: ioctl() failed!");
-      }	  
+        throw SickIOException("SickLMS5xxBufferMonitor::_flushTCPRecvBuffer: ioctl() failed!");
+      }
       
     }
     

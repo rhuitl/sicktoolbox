@@ -158,7 +158,7 @@ namespace SickToolbox {
 
       /* Is the device streaming? */
       if (_sick_streaming) {
-        _stopStreamingMeasurements();
+        _startStopStreamingMeasurements(false);
       }
 
       /* Set the desired configuration */
@@ -207,7 +207,7 @@ namespace SickToolbox {
 
       /* Is the device streaming? */
       if (_sick_streaming) {
-        _stopStreamingMeasurements();
+        _startStopStreamingMeasurements(false);
       }
 
       _setSickEchoFilter(echo_filter);
@@ -319,7 +319,7 @@ namespace SickToolbox {
       
       /* Is the device streaming? */
       if (_sick_streaming ) {
-        _stopStreamingMeasurements();
+        _startStopStreamingMeasurements(false);
       }
 
       std::cout << "\t*** Setting scan format " << _sickScanDataFormatToString(scan_format) << "..." << std::endl;
@@ -537,7 +537,7 @@ namespace SickToolbox {
 
       /* Is the device streaming? */
       if (_sick_streaming) {
-        _stopStreamingMeasurements(disp_banner);
+        _startStopStreamingMeasurements(false /*disp_banner*/);
       }
       
       /* Attempt to cancel the buffer monitor */
@@ -1100,7 +1100,7 @@ namespace SickToolbox {
     payload_buffer[16] = 'f';
     payload_buffer[17] = 'g';
 
-    payload_buffer[18] = ' ';    
+    payload_buffer[18] = ' ';
 
     /* Desired scanning frequency */
     std::string freq_str = int_to_str((int)scan_freq);
@@ -1111,18 +1111,18 @@ namespace SickToolbox {
       payload_buffer[20+i] = (uint8_t)((freq_str.c_str())[i]);
     }
 
-    payload_buffer[24] = ' ';    
+    payload_buffer[24] = ' ';
 
     /* Desired number of segments (always 1) */
     payload_buffer[25] = '+';
     payload_buffer[26] = '1';
 
-    payload_buffer[27] = ' ';    
+    payload_buffer[27] = ' ';
     
     /* Desired angular resolution */
     std::string res_str = int_to_str((int)scan_res);
     
-    payload_buffer[28] = '+';   
+    payload_buffer[28] = '+';
     
     for (int i = 0; i < 4; i++) {
       payload_buffer[29+i] = (uint8_t)((res_str.c_str())[i]);
@@ -1167,10 +1167,13 @@ namespace SickToolbox {
     try {
 
       /* Send message and get reply */
-      _sendMessageAndGetReply(send_message, recv_message, "sAN", "mLMPsetscancfg");
+      // Use a very long timeout (15s) because upon first use of "mLMPsetscancfg" after power-on,
+      // the LMS5xx indicator LED goes red, but will turn green after 10-12 seconds. Looks like the
+      // device is restarting once...
+      _sendMessageAndGetReply(send_message, recv_message, "sAN", "mLMPsetscancfg", 15*1000*1000);
 
     }
-        
+
     /* Handle a timeout! */
     catch (SickTimeoutException &sick_timeout_exception) {
       std::cerr << sick_timeout_exception.what() << std::endl;
@@ -1561,10 +1564,7 @@ namespace SickToolbox {
       _checkForMeasuringStatus();
       
       /* Request the data stream... */
-      _startStreamingMeasurements();
-      
-      /* Start the device, i.e., "The device is returned to the measurement mode after configuration" */
-      //_startDevice();
+      _startStopStreamingMeasurements(true);
     }
     
     /* Handle config exceptions */
@@ -1595,9 +1595,9 @@ namespace SickToolbox {
   }
   
   /*
-   * \brief Start Streaming Values
+   * \brief Start or stop streaming values
    */
-  void SickLMS5xx::_startStreamingMeasurements( ) throw( SickTimeoutException, SickIOException ) {
+  void SickLMS5xx::_startStopStreamingMeasurements( bool start ) throw( SickTimeoutException, SickIOException ) {
 
     /* Allocate a single buffer for payload contents */
     uint8_t payload_buffer[SickLMS5xxMessage::MESSAGE_PAYLOAD_MAX_LENGTH] = {0};
@@ -1623,7 +1623,7 @@ namespace SickToolbox {
     payload_buffer[15] = ' ';
 
     /* Start streaming! */
-    payload_buffer[16] = '1';
+    payload_buffer[16] = start ? '1' : '0';
     
     /* Construct command message */
     SickLMS5xxMessage send_message(payload_buffer,17);
@@ -1634,10 +1634,12 @@ namespace SickToolbox {
     try {
 
       /* Send message and get reply */      
-      _sendMessageAndGetReply(send_message, recv_message, "sSN", "LMDscandata");
-
+      //_sendMessageAndGetReply(send_message, recv_message, "sSN", "LMDscandata");
+      // The "sEN LMDscandata" request is answered by a "sEA LMDscandata 1", and following that,
+      // continuous measurement output follows as "sSN LMDscandata".
+      _sendMessageAndGetReply(send_message, recv_message, "sEA", "LMDscandata");
     }
-        
+
     /* Handle a timeout! */
     catch (SickTimeoutException &sick_timeout_exception) {
       std::cerr << sick_timeout_exception.what() << std::endl;
@@ -1652,8 +1654,16 @@ namespace SickToolbox {
     
     /* A safety net */
     catch (...) {
-      std::cerr << "SickLMS5xx::_startStreamingMeasurements: Unknown exception!!!" << std::endl;
+      std::cerr << "SickLMS5xx::_startStopStreamingMeasurements: Unknown exception!!!" << std::endl;
       throw;
+    }
+
+    /* Extract the message payload */
+    recv_message.GetPayload(payload_buffer);
+
+    /* Check if it worked... */
+    if (payload_buffer[16] != (start ? '1' : '0')) {
+      throw SickConfigException("SickLMS5xx::_startStopStreamingMeasurements: Unable to start measuring!");
     }
 
     /* Success! */
@@ -1707,75 +1717,6 @@ namespace SickToolbox {
       std::cerr << "SickLMS5xx::_startDevice: Unknown exception!!!" << std::endl;
       throw;
     }
-  }
-
-  /**
-   * \brief Stop Measurment Stream
-   */
-  void SickLMS5xx::_stopStreamingMeasurements( const bool disp_banner ) throw( SickTimeoutException, SickIOException ) {
-
-    if (disp_banner) {
-      std::cout << "\tStopping data stream..." << std::endl;
-    }
-      
-    /* Allocate a single buffer for payload contents */
-    uint8_t payload_buffer[SickLMS5xxMessage::MESSAGE_PAYLOAD_MAX_LENGTH] = {0};
-    
-    /* Set the command type */
-    payload_buffer[0]  = 's';
-    payload_buffer[1]  = 'E';
-    payload_buffer[2]  = 'N';
-    payload_buffer[3]  = ' ';
-    
-    /* Set the command */
-    payload_buffer[4]  = 'L';
-    payload_buffer[5]  = 'M';
-    payload_buffer[6]  = 'D';
-    payload_buffer[7]  = 's';
-    payload_buffer[8]  = 'c';
-    payload_buffer[9]  = 'a';
-    payload_buffer[10] = 'n';
-    payload_buffer[11] = 'd';
-    payload_buffer[12] = 'a';
-    payload_buffer[13] = 't';
-    payload_buffer[14] = 'a';
-    payload_buffer[15] = ' ';
-
-    /* Start streaming! */
-    payload_buffer[16] = '0';
-    
-    /* Construct command message */
-    SickLMS5xxMessage send_message(payload_buffer,17);
-
-    /* Setup container for recv message */
-    SickLMS5xxMessage recv_message;
-
-    try {
-
-      /* Send message and get reply */      
-      _sendMessage(send_message);
-
-    }
-        
-    /* Handle write buffer exceptions */
-    catch (SickIOException &sick_io_exception) {
-      std::cerr << sick_io_exception.what() << std::endl;
-      throw;
-    }
-    
-    /* A safety net */
-    catch (...) {
-      std::cerr << "SickLMS5xx::_stopStreamingMeasurements: Unknown exception!!!" << std::endl;
-      throw;
-    }
-
-    /* Success! */
-    if (disp_banner) {
-      std::cout << "\t\tStream stopped!" << std::endl;
-    }
-    
-    _sick_streaming = false;
-    
   }
 
   /**
@@ -2150,7 +2091,7 @@ namespace SickToolbox {
     try {
       
       /* Send a message using parent's method */
-      SickLIDAR< SickLMS5xxBufferMonitor, SickLMS5xxMessage >::_sendMessage(send_message,DEFAULT_SICK_LMS_5xx_BYTE_TIMEOUT);
+      SickLIDAR< SickLMS5xxBufferMonitor, SickLMS5xxMessage >::_sendMessage(send_message,0);
       
     }
     
@@ -2193,7 +2134,8 @@ namespace SickToolbox {
     try {
 
       /* Send a message and get reply using parent's method */
-      SickLIDAR< SickLMS5xxBufferMonitor, SickLMS5xxMessage >::_sendMessageAndGetReply(send_message,recv_message,(uint8_t *)expected_str.c_str(),expected_str.length(),DEFAULT_SICK_LMS_5xx_BYTE_TIMEOUT,timeout_value,num_tries);
+      // set byte_interval to zero because there's no point in sending bytes individually over TCP/IP
+      SickLIDAR< SickLMS5xxBufferMonitor, SickLMS5xxMessage >::_sendMessageAndGetReply(send_message,recv_message,(uint8_t *)expected_str.c_str(),expected_str.length(),0,timeout_value,num_tries);
 
     }
     
