@@ -1,0 +1,1 @@
+SUBDIRS=lms5xx_simple_app lms5xx_plot_values

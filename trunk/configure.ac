@@ -13,6 +13,7 @@ AM_CONFIG_HEADER([c++/drivers/base/src/SickConfig.hh])
 AX_SICK_LD_SRC_DIR(sickld)
 AX_SICK_LMS_1XX_SRC_DIR(sicklms1xx)
 AX_SICK_LMS_2XX_SRC_DIR(sicklms2xx)
+AX_SICK_LMS_5XX_SRC_DIR(sicklms5xx)
 	
 # Checks for programs.
 AC_PROG_CXX
@@ -96,12 +97,19 @@ AC_CONFIG_FILES([Makefile
                  c++/examples/lms2xx/lms2xx_stream_range_and_reflect/src/Makefile		 
 		 c++/examples/lms2xx/lms2xx_subrange/Makefile
                  c++/examples/lms2xx/lms2xx_subrange/src/Makefile		 
+                 c++/examples/lms5xx/Makefile
+                 c++/examples/lms5xx/lms5xx_simple_app/Makefile
+                 c++/examples/lms5xx/lms5xx_simple_app/src/Makefile
+		 c++/examples/lms5xx/lms5xx_plot_values/Makefile
+                 c++/examples/lms5xx/lms5xx_plot_values/src/Makefile
 		 c++/drivers/Makefile
                  c++/drivers/ld/Makefile
                  c++/drivers/ld/sickld/Makefile
                  c++/drivers/lms1xx/Makefile
                  c++/drivers/lms1xx/sicklms1xx/Makefile
 		 c++/drivers/lms2xx/Makefile
-                 c++/drivers/lms2xx/sicklms2xx/Makefile])
+                 c++/drivers/lms2xx/sicklms2xx/Makefile
+		 c++/drivers/lms5xx/Makefile
+                 c++/drivers/lms5xx/sicklms5xx/Makefile])
 		 
 AC_OUTPUT
