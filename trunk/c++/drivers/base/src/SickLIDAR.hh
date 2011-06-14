@@ -106,21 +106,21 @@ namespace SickToolbox {
 
     /** Search the stream for a payload with a particular "header" byte string */
     void _recvMessage( SICK_MSG_CLASS &sick_message,
-		       const uint8_t * const byte_sequence,
-		       const unsigned int byte_sequence_length,
-		       const unsigned int timeout_value ) const throw ( SickTimeoutException );
+                       const uint8_t * const byte_sequence,
+                       const unsigned int byte_sequence_length,
+                       const unsigned int timeout_value ) const throw ( SickTimeoutException );
     
     /** An inline function for computing elapsed time */
     double _computeElapsedTime( const struct timeval &beg_time, const struct timeval &end_time ) const { return ((end_time.tv_sec*1e6)+(end_time.tv_usec))-((beg_time.tv_sec*1e6)+beg_time.tv_usec); }
     
     /** Sends a request to the Sick and acquires looks for the reply */
     virtual void _sendMessageAndGetReply( const SICK_MSG_CLASS &send_message,
-					  SICK_MSG_CLASS &recv_message,
-					  const uint8_t * const byte_sequence,
-					  const unsigned int byte_sequence_length,
-					  const unsigned int byte_interval,
-					  const unsigned int timeout_value,
-					  const unsigned int num_tries ) throw( SickTimeoutException, SickIOException);
+                                          SICK_MSG_CLASS &recv_message,
+                                          const uint8_t * const byte_sequence,
+                                          const unsigned int byte_sequence_length,
+                                          const unsigned int byte_interval,
+                                          const unsigned int timeout_value,
+                                          const unsigned int num_tries ) throw( SickTimeoutException, SickIOException);
     
   };
 
@@ -268,7 +268,7 @@ namespace SickToolbox {
       
       /* Write the message to the stream */
       if ((unsigned int)write(_sick_fd,message_buffer,message_length) != message_length) {      
-	throw SickIOException("SickLIDAR::_sendMessage: write() failed!");
+        throw SickIOException("SickLIDAR::_sendMessage: write() failed!");
       }
 
     }
@@ -276,14 +276,14 @@ namespace SickToolbox {
       
       /* Write the message to the unit one byte at a time */
       for (unsigned int i = 0; i < message_length; i++) {
-	
-	/* Write a single byte to the stream */
-	if (write(_sick_fd,&message_buffer[i],1) != 1) {
-	  throw SickIOException("SickLIDAR::_sendMessage: write() failed!");
-	}
-	
-	/* Some time between bytes (Sick LMS 2xx likes this) */
-	usleep(byte_interval);	
+
+        /* Write a single byte to the stream */
+        if (write(_sick_fd,&message_buffer[i],1) != 1) {
+          throw SickIOException("SickLIDAR::_sendMessage: write() failed!");
+        }
+
+        /* Some time between bytes (Sick LMS 2xx likes this) */
+        usleep(byte_interval);
       }
 
     }    
@@ -298,7 +298,7 @@ namespace SickToolbox {
    */
   template< class SICK_MONITOR_CLASS, class SICK_MSG_CLASS >
   void SickLIDAR< SICK_MONITOR_CLASS, SICK_MSG_CLASS >::_recvMessage( SICK_MSG_CLASS &sick_message,
-								      const unsigned int timeout_value ) const throw ( SickTimeoutException ) {
+                                                                      const unsigned int timeout_value ) const throw ( SickTimeoutException ) {
 
     /* Timeval structs for handling timeouts */
     struct timeval beg_time, end_time;
@@ -315,7 +315,7 @@ namespace SickToolbox {
       /* Check whether the allowed time has expired */
       gettimeofday(&end_time,NULL);    
       if (_computeElapsedTime(beg_time,end_time) > timeout_value) {
-	throw SickTimeoutException("SickLIDAR::_recvMessage: Timeout occurred!");
+        throw SickTimeoutException("SickLIDAR::_recvMessage: Timeout occurred!");
       }
       
     }
@@ -334,9 +334,9 @@ namespace SickToolbox {
    */
   template< class SICK_MONITOR_CLASS, class SICK_MSG_CLASS >
   void SickLIDAR< SICK_MONITOR_CLASS, SICK_MSG_CLASS >::_recvMessage( SICK_MSG_CLASS &sick_message,
-								      const uint8_t * const byte_sequence,
-								      const unsigned int byte_sequence_length,
-								      const unsigned int timeout_value ) const throw( SickTimeoutException ) {
+                                                                      const uint8_t * const byte_sequence,
+                                                                      const unsigned int byte_sequence_length,
+                                                                      const unsigned int timeout_value ) const throw( SickTimeoutException ) {
 
     /* Define a buffer */
     uint8_t payload_buffer[SICK_MSG_CLASS::MESSAGE_PAYLOAD_MAX_LENGTH];
@@ -355,20 +355,22 @@ namespace SickToolbox {
       
       /* Attempt to acquire the message */
       unsigned int i = 0;
-      if (_sick_buffer_monitor->GetNextMessageFromMonitor(curr_message)) {	
-	
-	/* Extract the payload subregion */
-	curr_message.GetPayloadSubregion(payload_buffer,0,byte_sequence_length-1);
-	
-	/* Match the byte sequence */
-	for (i=0; (i < byte_sequence_length) && (payload_buffer[i] == byte_sequence[i]); i++);
+      if (_sick_buffer_monitor->GetNextMessageFromMonitor(curr_message)) {
 
-	/* Our message was found! */
-	if (i == byte_sequence_length) {
-	  sick_message = curr_message;
-	  break;
-	}
-	
+        /* Extract the payload subregion */
+        curr_message.GetPayloadSubregion(payload_buffer,0,byte_sequence_length-1);
+
+        /* Match the byte sequence */
+        for (i=0; (i < byte_sequence_length) && (payload_buffer[i] == byte_sequence[i]); i++);
+
+        /* Our message was found! */
+        if (i == byte_sequence_length) {
+          sick_message = curr_message;
+          break;
+        }
+
+        std::cout << "WARNING: Found unexpected message:" << std::endl;
+        curr_message.Print();
       }
       
       /* Sleep a little bit */
@@ -377,7 +379,7 @@ namespace SickToolbox {
       /* Check whether the allowed time has expired */
       gettimeofday(&end_time,NULL);        
       if (_computeElapsedTime(beg_time,end_time) > timeout_value) {
-      	throw SickTimeoutException();
+              throw SickTimeoutException();
       }      
       
     }
@@ -393,53 +395,53 @@ namespace SickToolbox {
    */
   template< class SICK_MONITOR_CLASS, class SICK_MSG_CLASS >
   void SickLIDAR< SICK_MONITOR_CLASS, SICK_MSG_CLASS >::_sendMessageAndGetReply( const SICK_MSG_CLASS &send_message,
-										 SICK_MSG_CLASS &recv_message,
-										 const uint8_t * const byte_sequence,
-										 const unsigned int byte_sequence_length,
-										 const unsigned int byte_interval,
-										 const unsigned int timeout_value,
-										 const unsigned int num_tries ) 
-										 throw( SickTimeoutException, SickIOException ) {
+                                                                                 SICK_MSG_CLASS &recv_message,
+                                                                                 const uint8_t * const byte_sequence,
+                                                                                 const unsigned int byte_sequence_length,
+                                                                                 const unsigned int byte_interval,
+                                                                                 const unsigned int timeout_value,
+                                                                                 const unsigned int num_tries )
+                                                                                 throw( SickTimeoutException, SickIOException ) {
     
     /* Send the message for at most num_tries number of times */
     for(unsigned int i = 0; i < num_tries; i++) {
 
       try {
 
-	/* Send the frame to the unit */
-	_sendMessage(send_message,byte_interval);
-	
-	/* Wait for the reply! */
-	_recvMessage(recv_message,byte_sequence,byte_sequence_length,timeout_value);
+        /* Send the frame to the unit */
+        _sendMessage(send_message,byte_interval);
 
-	/* message was found! */
-	break;
+        /* Wait for the reply! */
+        _recvMessage(recv_message,byte_sequence,byte_sequence_length,timeout_value);
+
+        /* message was found! */
+        break;
 
       }
 
       /* Handle a timeout! */
       catch (SickTimeoutException &sick_timeout) {
-	
-	/* Check if it was found! */
-	if (i == num_tries - 1) {
-	  throw SickTimeoutException("SickLIDAR::_sendMessageAndGetReply: Attempted max number of tries w/o success!");
-	}
-	
-	/* Display the number of tries remaining! */
-	std::cerr << sick_timeout.what() << " " << num_tries - i - 1  << " tries remaining" <<  std::endl;
-	
+
+        /* Check if it was found! */
+        if (i == num_tries - 1) {
+          throw SickTimeoutException("SickLIDAR::_sendMessageAndGetReply: Attempted max number of tries w/o success!");
+        }
+
+        /* Display the number of tries remaining! */
+        std::cerr << sick_timeout.what() << " " << num_tries - i - 1  << " tries remaining" <<  std::endl;
+
       }
       
       /* Handle write buffer exceptions */
       catch (SickIOException &sick_io_error) {
-	std::cerr << sick_io_error.what() << std::endl;
-	throw;
+        std::cerr << sick_io_error.what() << std::endl;
+        throw;
       }
       
       /* A safety net */
       catch (...) {
-	std::cerr << "SickLIDAR::_sendMessageAndGetReply: Unknown exception!!!" << std::endl;
-	throw;
+        std::cerr << "SickLIDAR::_sendMessageAndGetReply: Unknown exception!!!" << std::endl;
+        throw;
       }
       
     }
