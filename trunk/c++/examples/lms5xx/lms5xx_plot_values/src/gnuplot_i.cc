@@ -639,7 +639,7 @@ void Gnuplot::plot_xy5(vector<double> x, vector<double> y,
                        const string &title)
 {
     ostringstream cmdstr;
-cout << "Plotting with style " << this->pstyle << endl;
+
     //
     // command to be sent to gnuplot
     //
