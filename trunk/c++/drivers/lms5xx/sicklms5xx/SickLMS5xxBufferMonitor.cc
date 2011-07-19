@@ -53,7 +53,7 @@ namespace SickToolbox {
       do {
 	
          /* Grab the next byte from the stream */
-         _readBytes(&byte_buffer,1,DEFAULT_SICK_LMS_5xx_BYTE_TIMEOUT);
+         _readBytes(&byte_buffer,1,DEFAULT_SICK_LMS_5XX_BYTE_TIMEOUT);
 
       }
       while (byte_buffer != 0x02);
@@ -63,7 +63,7 @@ namespace SickToolbox {
       do {
 
         payload_length++;
-         _readBytes(&payload_buffer[payload_length-1],1,DEFAULT_SICK_LMS_5xx_BYTE_TIMEOUT);
+         _readBytes(&payload_buffer[payload_length-1],1,DEFAULT_SICK_LMS_5XX_BYTE_TIMEOUT);
 
       }
       while (payload_buffer[payload_length-1] != 0x03);

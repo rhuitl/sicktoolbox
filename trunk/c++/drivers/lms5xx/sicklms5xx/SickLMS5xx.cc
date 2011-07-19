@@ -53,9 +53,9 @@ namespace SickToolbox {
     SickLIDAR< SickLMS5xxBufferMonitor, SickLMS5xxMessage >( ),
     _sick_ip_address(sick_ip_address),
     _sick_tcp_port(sick_tcp_port),
-    _sick_scan_format(SICK_LMS_5xx_SCAN_FORMAT_UNKNOWN),
-    _sick_echo_filter(SICK_LMS_5xx_ECHO_FILTER_LAST),
-    _sick_device_status(SICK_LMS_5xx_STATUS_UNKNOWN),
+    _sick_scan_format(SICK_LMS_5XX_SCAN_FORMAT_UNKNOWN),
+    _sick_echo_filter(SICK_LMS_5XX_ECHO_FILTER_LAST),
+    _sick_device_status(SICK_LMS_5XX_STATUS_UNKNOWN),
     _sick_temp_safe(false),
     _sick_streaming(false)
   {
@@ -142,8 +142,8 @@ namespace SickToolbox {
   
   /**
    * \brief Sets the Sick LMS 5xx scan frequency and resolution
-   * \param scan_freq Desired scan frequency (e.g. SickLMS5xx::SICK_LMS_5xx_SCAN_FREQ_50)
-   * \param scan_res Desired scan angular resolution (e.g. SickLMS5xx::SICK_LMS_5xx_SCAN_RES_50)
+   * \param scan_freq Desired scan frequency (e.g. SickLMS5xx::SICK_LMS_5XX_SCAN_FREQ_50)
+   * \param scan_res Desired scan angular resolution (e.g. SickLMS5xx::SICK_LMS_5XX_SCAN_RES_50)
    * \param write_to_eeprom Write the configuration to EEPROM
    */
   void SickLMS5xx::SetSickScanFreqAndRes( const sick_lms_5xx_scan_freq_t scan_freq,
@@ -603,12 +603,12 @@ namespace SickToolbox {
    */
   SickLMS5xx::sick_lms_5xx_scan_freq_t SickLMS5xx::IntToSickScanFreq( const int scan_freq ) const {
           switch(scan_freq) {
-                  case 25:  return SICK_LMS_5xx_SCAN_FREQ_25;
-                  case 35:  return SICK_LMS_5xx_SCAN_FREQ_35;
-                  case 50:  return SICK_LMS_5xx_SCAN_FREQ_50;
-                  case 75:  return SICK_LMS_5xx_SCAN_FREQ_75;
-                  case 100: return SICK_LMS_5xx_SCAN_FREQ_100;
-                  default:  return SICK_LMS_5xx_SCAN_FREQ_UNKNOWN;
+                  case 25:  return SICK_LMS_5XX_SCAN_FREQ_25;
+                  case 35:  return SICK_LMS_5XX_SCAN_FREQ_35;
+                  case 50:  return SICK_LMS_5XX_SCAN_FREQ_50;
+                  case 75:  return SICK_LMS_5XX_SCAN_FREQ_75;
+                  case 100: return SICK_LMS_5XX_SCAN_FREQ_100;
+                  default:  return SICK_LMS_5XX_SCAN_FREQ_UNKNOWN;
           }
   }
 
@@ -618,15 +618,15 @@ namespace SickToolbox {
   int SickLMS5xx::SickScanFreqToInt( const sick_lms_5xx_scan_freq_t scan_freq ) const {
 
     switch(scan_freq) {
-    case SICK_LMS_5xx_SCAN_FREQ_25:
+    case SICK_LMS_5XX_SCAN_FREQ_25:
       return 25;
-    case SICK_LMS_5xx_SCAN_FREQ_35:
+    case SICK_LMS_5XX_SCAN_FREQ_35:
       return 35;
-    case SICK_LMS_5xx_SCAN_FREQ_50:
+    case SICK_LMS_5XX_SCAN_FREQ_50:
       return 50;
-    case SICK_LMS_5xx_SCAN_FREQ_75:
+    case SICK_LMS_5XX_SCAN_FREQ_75:
       return 75;
-    case SICK_LMS_5xx_SCAN_FREQ_100:
+    case SICK_LMS_5XX_SCAN_FREQ_100:
       return 100;
     default:
       return -1;
@@ -639,20 +639,20 @@ namespace SickToolbox {
    */
   SickLMS5xx::sick_lms_5xx_scan_res_t SickLMS5xx::DoubleToSickScanRes( const double scan_res ) const {
           if(scan_res == 0.1667)
-                  return SICK_LMS_5xx_SCAN_RES_17;
+                  return SICK_LMS_5XX_SCAN_RES_17;
           else if(scan_res == 0.25  )
-                  return SICK_LMS_5xx_SCAN_RES_25;
+                  return SICK_LMS_5XX_SCAN_RES_25;
           else if(scan_res == 0.3333)
-                  return SICK_LMS_5xx_SCAN_RES_33;
+                  return SICK_LMS_5XX_SCAN_RES_33;
           else if(scan_res == 0.5   )
-                  return SICK_LMS_5xx_SCAN_RES_50;
+                  return SICK_LMS_5XX_SCAN_RES_50;
           else if(scan_res == 0.6667)
-                  return SICK_LMS_5xx_SCAN_RES_67;
+                  return SICK_LMS_5XX_SCAN_RES_67;
           else if(scan_res == 0.75  )
-                  return SICK_LMS_5xx_SCAN_RES_75;
+                  return SICK_LMS_5XX_SCAN_RES_75;
           else if(scan_res == 1.0   )
-                  return SICK_LMS_5xx_SCAN_RES_100;
-          return SICK_LMS_5xx_SCAN_RES_UNKNOWN;
+                  return SICK_LMS_5XX_SCAN_RES_100;
+          return SICK_LMS_5XX_SCAN_RES_UNKNOWN;
   }  
 
   /**
@@ -661,19 +661,19 @@ namespace SickToolbox {
   double SickLMS5xx::SickScanResToDouble( const sick_lms_5xx_scan_res_t scan_res ) const {
 
     switch(scan_res) {
-        case SICK_LMS_5xx_SCAN_RES_17:
+        case SICK_LMS_5XX_SCAN_RES_17:
           return 0.1667;
-        case SICK_LMS_5xx_SCAN_RES_25:
+        case SICK_LMS_5XX_SCAN_RES_25:
           return 0.25;
-        case SICK_LMS_5xx_SCAN_RES_33:
+        case SICK_LMS_5XX_SCAN_RES_33:
           return 0.3333;
-        case SICK_LMS_5xx_SCAN_RES_50:
+        case SICK_LMS_5XX_SCAN_RES_50:
           return 0.5;
-        case SICK_LMS_5xx_SCAN_RES_67:
+        case SICK_LMS_5XX_SCAN_RES_67:
           return 0.6667;
-        case SICK_LMS_5xx_SCAN_RES_75:
+        case SICK_LMS_5XX_SCAN_RES_75:
           return 0.75;
-        case SICK_LMS_5xx_SCAN_RES_100:
+        case SICK_LMS_5XX_SCAN_RES_100:
           return 1.0;
         default:
           return -1;
@@ -724,7 +724,7 @@ namespace SickToolbox {
 
         /* Setup the timeout structure */
         memset(&timeout_val,0,sizeof(timeout_val));                  // Initialize the buffer
-        timeout_val.tv_usec = DEFAULT_SICK_LMS_5xx_CONNECT_TIMEOUT;  // Wait for specified time before throwing a timeout
+        timeout_val.tv_usec = DEFAULT_SICK_LMS_5XX_CONNECT_TIMEOUT;  // Wait for specified time before throwing a timeout
       
         /* Wait for the OS to tell us that the connection is established! */
         num_active_files = select(getdtablesize(),0,&file_desc_set,0,&timeout_val);
@@ -1057,8 +1057,8 @@ namespace SickToolbox {
 
   /**
    * \brief Set the Sick LMS 5xx scan configuration (volatile, does not write to EEPROM)
-   * \param scan_freq Desired scan frequency (Either SickLMS5xx::SICK_LMS_5xx_SCAN_FREQ_25 or SickLMS5xx::SICK_LMS_5xx_SCAN_FREQ_50)
-   * \param scan_res Desired angular resolution (SickLMS5xx::SICK_LMS_5xx_SCAN_RES_25 or SickLMS5xx::SICK_LMS_5xx_SCAN_RES_50)
+   * \param scan_freq Desired scan frequency (Either SickLMS5xx::SICK_LMS_5XX_SCAN_FREQ_25 or SickLMS5xx::SICK_LMS_5XX_SCAN_FREQ_50)
+   * \param scan_res Desired angular resolution (SickLMS5xx::SICK_LMS_5XX_SCAN_RES_25 or SickLMS5xx::SICK_LMS_5XX_SCAN_RES_50)
    * \param start_angle Desired start angle in (1/10000) deg (-50000 to 1850000)
    * \param stop_angle Desired stop angle in (1/10000) deg (-50000 to 1850000)
    * \param write_to_eeprom Indicates whether the value should be written to EEPROM
@@ -1736,7 +1736,7 @@ namespace SickToolbox {
 
     /* Check the shared object */
     bool first_pass = true;
-    while( _sick_device_status != SICK_LMS_5xx_STATUS_READY_FOR_MEASUREMENT ) {
+    while( _sick_device_status != SICK_LMS_5XX_STATUS_READY_FOR_MEASUREMENT ) {
 
       if (first_pass) {
 
@@ -1823,7 +1823,7 @@ namespace SickToolbox {
     payload_buffer[22] = ' ';
 
     /* Send remission values? */
-    if (scan_format == SICK_LMS_5xx_SCAN_FORMAT_DIST)
+    if (scan_format == SICK_LMS_5XX_SCAN_FORMAT_DIST)
       payload_buffer[23] = '0';   // 0 = no, 1 = yes
     else
       payload_buffer[23] = '1';   // 0 = no, 1 = yes
@@ -2069,12 +2069,12 @@ namespace SickToolbox {
     }
     
     /* Check angular bounds */
-    if (start_angle < SICK_LMS_5xx_SCAN_AREA_MIN_ANGLE || start_angle > SICK_LMS_5xx_SCAN_AREA_MAX_ANGLE) {
+    if (start_angle < SICK_LMS_5XX_SCAN_AREA_MIN_ANGLE || start_angle > SICK_LMS_5XX_SCAN_AREA_MAX_ANGLE) {
       return false;
     }
 
     /* Check angular bounds */
-    if (stop_angle < SICK_LMS_5xx_SCAN_AREA_MIN_ANGLE || stop_angle > SICK_LMS_5xx_SCAN_AREA_MAX_ANGLE) {
+    if (stop_angle < SICK_LMS_5XX_SCAN_AREA_MIN_ANGLE || stop_angle > SICK_LMS_5XX_SCAN_AREA_MAX_ANGLE) {
       return false;
     }
     
@@ -2168,7 +2168,7 @@ namespace SickToolbox {
     try {
     
       /* Receive message using parent's method */
-      SickLIDAR< SickLMS5xxBufferMonitor, SickLMS5xxMessage >::_recvMessage(sick_message,DEFAULT_SICK_LMS_5xx_MESSAGE_TIMEOUT);
+      SickLIDAR< SickLMS5xxBufferMonitor, SickLMS5xxMessage >::_recvMessage(sick_message,DEFAULT_SICK_LMS_5XX_MESSAGE_TIMEOUT);
 
     }
 
@@ -2193,21 +2193,21 @@ namespace SickToolbox {
   {
     switch(status) {
     case 1:
-      return SICK_LMS_5xx_STATUS_INITIALIZATION;
+      return SICK_LMS_5XX_STATUS_INITIALIZATION;
     case 2:
-      return SICK_LMS_5xx_STATUS_CONFIGURATION;
+      return SICK_LMS_5XX_STATUS_CONFIGURATION;
     case 3:
-      return SICK_LMS_5xx_STATUS_IDLE;
+      return SICK_LMS_5XX_STATUS_IDLE;
     case 4:
-      return SICK_LMS_5xx_STATUS_ROTATED;
+      return SICK_LMS_5XX_STATUS_ROTATED;
     case 5:
-      return SICK_LMS_5xx_STATUS_IN_PREP;
+      return SICK_LMS_5XX_STATUS_IN_PREP;
     case 6:
-      return SICK_LMS_5xx_STATUS_READY;
+      return SICK_LMS_5XX_STATUS_READY;
     case 7:
-      return SICK_LMS_5xx_STATUS_READY_FOR_MEASUREMENT;
+      return SICK_LMS_5XX_STATUS_READY_FOR_MEASUREMENT;
     default:
-      return SICK_LMS_5xx_STATUS_UNKNOWN;
+      return SICK_LMS_5XX_STATUS_UNKNOWN;
     }
   }
 
@@ -2264,9 +2264,9 @@ namespace SickToolbox {
     
     /* Determine the type of distance measurements */
     switch (scan_format) {
-    case SICK_LMS_5xx_SCAN_FORMAT_DIST:
+    case SICK_LMS_5XX_SCAN_FORMAT_DIST:
       return "(distance, no reflection)";
-    case SICK_LMS_5xx_SCAN_FORMAT_DIST_REFLECT:
+    case SICK_LMS_5XX_SCAN_FORMAT_DIST_REFLECT:
       return "(distance and reflection)";
     default:
       return "Unknown";

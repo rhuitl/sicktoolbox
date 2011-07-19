@@ -52,11 +52,11 @@ int main(int argc, char * argv[]) {
   SickLMS5xx sick_lms_5xx;
   
   /* Define some buffers to hold the returned measurements */
-  unsigned int range_vals1[SickLMS5xx::SICK_LMS_5xx_MAX_NUM_MEASUREMENTS] = {0};
-  unsigned int range_vals2[SickLMS5xx::SICK_LMS_5xx_MAX_NUM_MEASUREMENTS] = {0};
-  unsigned int range_vals3[SickLMS5xx::SICK_LMS_5xx_MAX_NUM_MEASUREMENTS] = {0};
-  unsigned int range_vals4[SickLMS5xx::SICK_LMS_5xx_MAX_NUM_MEASUREMENTS] = {0};
-  unsigned int range_vals5[SickLMS5xx::SICK_LMS_5xx_MAX_NUM_MEASUREMENTS] = {0};
+  unsigned int range_vals1[SickLMS5xx::SICK_LMS_5XX_MAX_NUM_MEASUREMENTS] = {0};
+  unsigned int range_vals2[SickLMS5xx::SICK_LMS_5XX_MAX_NUM_MEASUREMENTS] = {0};
+  unsigned int range_vals3[SickLMS5xx::SICK_LMS_5XX_MAX_NUM_MEASUREMENTS] = {0};
+  unsigned int range_vals4[SickLMS5xx::SICK_LMS_5XX_MAX_NUM_MEASUREMENTS] = {0};
+  unsigned int range_vals5[SickLMS5xx::SICK_LMS_5XX_MAX_NUM_MEASUREMENTS] = {0};
   unsigned int num_measurements = 0;
 
   /*
@@ -64,11 +64,11 @@ int main(int argc, char * argv[]) {
    */
   try {
     sick_lms_5xx.Initialize();
-/*    sick_lms_5xx.SetSickScanFreqAndRes(SickLMS5xx::SICK_LMS_5xx_SCAN_FREQ_25,
-                                       SickLMS5xx::SICK_LMS_5xx_SCAN_RES_17);*/
-    sick_lms_5xx.SetSickScanFreqAndRes(SickLMS5xx::SICK_LMS_5xx_SCAN_FREQ_25,
-                                       SickLMS5xx::SICK_LMS_5xx_SCAN_RES_25);
-    sick_lms_5xx.SetSickEchoFilter(SickLMS5xx::SICK_LMS_5xx_ECHO_FILTER_ALL_ECHOES);
+/*    sick_lms_5xx.SetSickScanFreqAndRes(SickLMS5xx::SICK_LMS_5XX_SCAN_FREQ_25,
+                                       SickLMS5xx::SICK_LMS_5XX_SCAN_RES_17);*/
+    sick_lms_5xx.SetSickScanFreqAndRes(SickLMS5xx::SICK_LMS_5XX_SCAN_FREQ_25,
+                                       SickLMS5xx::SICK_LMS_5XX_SCAN_RES_25);
+    sick_lms_5xx.SetSickEchoFilter(SickLMS5xx::SICK_LMS_5XX_ECHO_FILTER_ALL_ECHOES);
   }
 
   catch(...) {

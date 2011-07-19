@@ -14,18 +14,18 @@
  * See http://sicktoolbox.sourceforge.net
  */
 
-#ifndef SICK_LMS_5xx_HH
-#define SICK_LMS_5xx_HH
+#ifndef SICK_LMS_5XX_HH
+#define SICK_LMS_5XX_HH
 
 /* Macros */
-#define DEFAULT_SICK_LMS_5xx_IP_ADDRESS                   "192.168.0.1"                 ///< Default IP Address
-#define DEFAULT_SICK_LMS_5xx_TCP_PORT                            (2111)                 ///< Sick LMS 5xx TCP/IP Port
-#define DEFAULT_SICK_LMS_5xx_CONNECT_TIMEOUT                  (1000000)                 ///< Max time for establishing connection (usecs)
-#define DEFAULT_SICK_LMS_5xx_MESSAGE_TIMEOUT                  (5000000)                 ///< Max time for reply (usecs)
-#define DEFAULT_SICK_LMS_5xx_STATUS_TIMEOUT                  (60000000)                 ///< Max time it should take to change status
+#define DEFAULT_SICK_LMS_5XX_IP_ADDRESS                   "192.168.0.1"                 ///< Default IP Address
+#define DEFAULT_SICK_LMS_5XX_TCP_PORT                            (2111)                 ///< Sick LMS 5xx TCP/IP Port
+#define DEFAULT_SICK_LMS_5XX_CONNECT_TIMEOUT                  (1000000)                 ///< Max time for establishing connection (usecs)
+#define DEFAULT_SICK_LMS_5XX_MESSAGE_TIMEOUT                  (5000000)                 ///< Max time for reply (usecs)
+#define DEFAULT_SICK_LMS_5XX_STATUS_TIMEOUT                  (60000000)                 ///< Max time it should take to change status
 
-#define SICK_LMS_5xx_SCAN_AREA_MIN_ANGLE                       (-50000)                 ///< -5 degrees (1/10000) degree
-#define SICK_LMS_5xx_SCAN_AREA_MAX_ANGLE                      (1850000)                 ///< 185 degrees (1/10000) degree
+#define SICK_LMS_5XX_SCAN_AREA_MIN_ANGLE                       (-50000)                 ///< -5 degrees (1/10000) degree
+#define SICK_LMS_5XX_SCAN_AREA_MAX_ANGLE                      (1850000)                 ///< 185 degrees (1/10000) degree
 
 /* Definition dependencies */
 #include <string>
@@ -51,7 +51,7 @@ namespace SickToolbox {
 
   public:
     
-    static const int SICK_LMS_5xx_MAX_NUM_MEASUREMENTS = 1141;                         ///< LMS 5xx max number of measurements
+    static const int SICK_LMS_5XX_MAX_NUM_MEASUREMENTS = 1141;                         ///< LMS 5xx max number of measurements
 
     /*!
      * \enum sick_lms_5xx_status_t
@@ -60,14 +60,14 @@ namespace SickToolbox {
      */
     enum sick_lms_5xx_status_t {
       
-      SICK_LMS_5xx_STATUS_UNKNOWN = 0x00,                                              ///< LMS 5xx status undefined
-      SICK_LMS_5xx_STATUS_INITIALIZATION = 0x01,                                       ///< LMS 5xx initializing
-      SICK_LMS_5xx_STATUS_CONFIGURATION = 0x02,                                        ///< LMS 5xx configuration
-      SICK_LMS_5xx_STATUS_IDLE = 0x03,                                                 ///< LMS 5xx is idle
-      SICK_LMS_5xx_STATUS_ROTATED = 0x04,                                              ///< LMS 5xx mirror rotating
-      SICK_LMS_5xx_STATUS_IN_PREP = 0x05,                                              ///< LMS 5xx in preparation
-      SICK_LMS_5xx_STATUS_READY = 0x06,                                                ///< LMS 5xx is ready
-      SICK_LMS_5xx_STATUS_READY_FOR_MEASUREMENT = 0x07                                 ///< LMS 5xx is ready to give measurements
+      SICK_LMS_5XX_STATUS_UNKNOWN = 0x00,                                              ///< LMS 5xx status undefined
+      SICK_LMS_5XX_STATUS_INITIALIZATION = 0x01,                                       ///< LMS 5xx initializing
+      SICK_LMS_5XX_STATUS_CONFIGURATION = 0x02,                                        ///< LMS 5xx configuration
+      SICK_LMS_5XX_STATUS_IDLE = 0x03,                                                 ///< LMS 5xx is idle
+      SICK_LMS_5XX_STATUS_ROTATED = 0x04,                                              ///< LMS 5xx mirror rotating
+      SICK_LMS_5XX_STATUS_IN_PREP = 0x05,                                              ///< LMS 5xx in preparation
+      SICK_LMS_5XX_STATUS_READY = 0x06,                                                ///< LMS 5xx is ready
+      SICK_LMS_5XX_STATUS_READY_FOR_MEASUREMENT = 0x07                                 ///< LMS 5xx is ready to give measurements
       
     };        
     
@@ -78,9 +78,9 @@ namespace SickToolbox {
      */
     enum sick_lms_5xx_scan_format_t {
       
-      SICK_LMS_5xx_SCAN_FORMAT_DIST = 0x00,                                             ///< Dist, no reflect
-      SICK_LMS_5xx_SCAN_FORMAT_DIST_REFLECT = 0x01,                                     ///< Dist, reflection
-      SICK_LMS_5xx_SCAN_FORMAT_UNKNOWN = 0xFF                                           ///< Unknown format
+      SICK_LMS_5XX_SCAN_FORMAT_DIST = 0x00,                                             ///< Dist, no reflect
+      SICK_LMS_5XX_SCAN_FORMAT_DIST_REFLECT = 0x01,                                     ///< Dist, reflection
+      SICK_LMS_5XX_SCAN_FORMAT_UNKNOWN = 0xFF                                           ///< Unknown format
       
     };
 
@@ -90,9 +90,9 @@ namespace SickToolbox {
      */
     enum sick_lms_5xx_echo_filter_t {
 
-      SICK_LMS_5xx_ECHO_FILTER_FIRST = 0x00,                                            ///< First echo
-      SICK_LMS_5xx_ECHO_FILTER_ALL_ECHOES = 0x01,                                       ///< All echoes
-      SICK_LMS_5xx_ECHO_FILTER_LAST = 0x02                                              ///< Last echo (default)
+      SICK_LMS_5XX_ECHO_FILTER_FIRST = 0x00,                                            ///< First echo
+      SICK_LMS_5XX_ECHO_FILTER_ALL_ECHOES = 0x01,                                       ///< All echoes
+      SICK_LMS_5XX_ECHO_FILTER_LAST = 0x02                                              ///< Last echo (default)
 
     };
 
@@ -103,12 +103,12 @@ namespace SickToolbox {
      */
     enum sick_lms_5xx_scan_freq_t {
 
-      SICK_LMS_5xx_SCAN_FREQ_UNKNOWN = 0x00,                                            ///< LMS 5xx scan freq unknown
-      SICK_LMS_5xx_SCAN_FREQ_25  = 2500,                                                ///< LMS 5xx scan freq 25Hz
-      SICK_LMS_5xx_SCAN_FREQ_35  = 3500,                                                ///< LMS 5xx scan freq 35Hz
-      SICK_LMS_5xx_SCAN_FREQ_50  = 5000,                                                ///< LMS 5xx scan freq 50Hz
-      SICK_LMS_5xx_SCAN_FREQ_75  = 7500,                                                ///< LMS 5xx scan freq 75Hz
-      SICK_LMS_5xx_SCAN_FREQ_100 = 10000                                                ///< LMS 5xx scan freq 100Hz
+      SICK_LMS_5XX_SCAN_FREQ_UNKNOWN = 0x00,                                            ///< LMS 5xx scan freq unknown
+      SICK_LMS_5XX_SCAN_FREQ_25  = 2500,                                                ///< LMS 5xx scan freq 25Hz
+      SICK_LMS_5XX_SCAN_FREQ_35  = 3500,                                                ///< LMS 5xx scan freq 35Hz
+      SICK_LMS_5XX_SCAN_FREQ_50  = 5000,                                                ///< LMS 5xx scan freq 50Hz
+      SICK_LMS_5XX_SCAN_FREQ_75  = 7500,                                                ///< LMS 5xx scan freq 75Hz
+      SICK_LMS_5XX_SCAN_FREQ_100 = 10000                                                ///< LMS 5xx scan freq 100Hz
 
     };
 
@@ -119,20 +119,20 @@ namespace SickToolbox {
      */
     enum sick_lms_5xx_scan_res_t {
 
-      SICK_LMS_5xx_SCAN_RES_UNKNOWN = 0x00,                                              ///< LMS 5xx scan res unknown
-      SICK_LMS_5xx_SCAN_RES_17  = 1667,                                                  ///< LMS 5xx scan res 0.1667 deg
-      SICK_LMS_5xx_SCAN_RES_25  = 2500,                                                  ///< LMS 5xx scan res 0.25 deg
-      SICK_LMS_5xx_SCAN_RES_33  = 3333,                                                  ///< LMS 5xx scan res 0.3333 deg
-      SICK_LMS_5xx_SCAN_RES_50  = 5000,                                                  ///< LMS 5xx scan res 0.50 deg
-      SICK_LMS_5xx_SCAN_RES_67  = 6667,                                                  ///< LMS 5xx scan res 0.6667 deg
-      SICK_LMS_5xx_SCAN_RES_75  = 7500,                                                  ///< LMS 5xx scan res 0.75 deg
-      SICK_LMS_5xx_SCAN_RES_100 = 10000,                                                 ///< LMS 5xx scan res 1.0 deg
+      SICK_LMS_5XX_SCAN_RES_UNKNOWN = 0x00,                                              ///< LMS 5xx scan res unknown
+      SICK_LMS_5XX_SCAN_RES_17  = 1667,                                                  ///< LMS 5xx scan res 0.1667 deg
+      SICK_LMS_5XX_SCAN_RES_25  = 2500,                                                  ///< LMS 5xx scan res 0.25 deg
+      SICK_LMS_5XX_SCAN_RES_33  = 3333,                                                  ///< LMS 5xx scan res 0.3333 deg
+      SICK_LMS_5XX_SCAN_RES_50  = 5000,                                                  ///< LMS 5xx scan res 0.50 deg
+      SICK_LMS_5XX_SCAN_RES_67  = 6667,                                                  ///< LMS 5xx scan res 0.6667 deg
+      SICK_LMS_5XX_SCAN_RES_75  = 7500,                                                  ///< LMS 5xx scan res 0.75 deg
+      SICK_LMS_5XX_SCAN_RES_100 = 10000,                                                 ///< LMS 5xx scan res 1.0 deg
 
     };
 
     /** Primary constructor */
-    SickLMS5xx( const std::string sick_ip_address = DEFAULT_SICK_LMS_5xx_IP_ADDRESS,
-                const uint16_t sick_tcp_port = DEFAULT_SICK_LMS_5xx_TCP_PORT );
+    SickLMS5xx( const std::string sick_ip_address = DEFAULT_SICK_LMS_5XX_IP_ADDRESS,
+                const uint16_t sick_tcp_port = DEFAULT_SICK_LMS_5XX_TCP_PORT );
     
     /** Initializes the Sick LD unit (use scan areas defined in flash) */
     void Initialize( const bool disp_banner = true ) throw( SickIOException, SickThreadException, SickTimeoutException, SickErrorException );
@@ -270,7 +270,7 @@ namespace SickToolbox {
                                   SickLMS5xxMessage &recv_message,
                                   const std::string reply_command_code,
                                   const std::string reply_command,
-                                  const unsigned int timeout_value = DEFAULT_SICK_LMS_5xx_MESSAGE_TIMEOUT,
+                                  const unsigned int timeout_value = DEFAULT_SICK_LMS_5XX_MESSAGE_TIMEOUT,
                                   const unsigned int num_tries = 1 ) throw( SickIOException, SickTimeoutException );
 
     /** Receive a message */
@@ -292,7 +292,7 @@ namespace SickToolbox {
     void _startStopStreamingMeasurements( bool start ) throw ( SickTimeoutException, SickIOException );
 
     /** Set device to measuring mode */
-    void _checkForMeasuringStatus( unsigned int timeout_value = DEFAULT_SICK_LMS_5xx_STATUS_TIMEOUT ) throw( SickTimeoutException, SickIOException );
+    void _checkForMeasuringStatus( unsigned int timeout_value = DEFAULT_SICK_LMS_5XX_STATUS_TIMEOUT ) throw( SickTimeoutException, SickIOException );
 
     /** Sets the sick scan data format */
     void _setSickScanDataFormat( const sick_lms_5xx_scan_format_t scan_format ) throw( SickTimeoutException, SickIOException, SickThreadException, SickErrorException );

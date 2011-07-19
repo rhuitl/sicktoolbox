@@ -18,8 +18,8 @@
 #ifndef SICK_LMS_5xx_BUFFER_MONITOR_HH
 #define SICK_LMS_5xx_BUFFER_MONITOR_HH
 
-// Note: In contrast to the LMS1xx/2xx code, this value is used for receives only, not for sending.
-#define DEFAULT_SICK_LMS_5xx_BYTE_TIMEOUT         (100000)  ///< Max allowable time between consecutive bytes
+// Note: In contrast to the LMS2xx code, this value is used for receives only, not for sending.
+#define DEFAULT_SICK_LMS_5XX_BYTE_TIMEOUT         (100000)  ///< Max allowable time between consecutive bytes
 
 /* Definition dependencies */
 #include "SickLMS5xxMessage.hh"
