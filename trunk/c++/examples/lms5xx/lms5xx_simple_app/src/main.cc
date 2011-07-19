@@ -43,13 +43,13 @@ int main(int argc, char* argv[])
   try {
     unsigned int status = 1;
     unsigned int num_measurements = 0;
-    unsigned int range_1_vals[SickLMS5xx::SICK_LMS_5xx_MAX_NUM_MEASUREMENTS];
-    //unsigned int range_2_vals[SickLMS5xx::SICK_LMS_5xx_MAX_NUM_MEASUREMENTS];
-    //sick_lms_5xx.SetSickScanFreqAndRes(SickLMS5xx::SICK_LMS_5xx_SCAN_FREQ_25,
-    //SickLMS5xx::SICK_LMS_5xx_SCAN_RES_25);
-    //sick_lms_5xx.SetSickScanDataFormat(SickLMS5xx::SICK_LMS_5xx_DIST_DOUBLE_PULSE,
-    //				         SickLMS5xx::SICK_LMS_5xx_REFLECT_NONE);
-    sick_lms_5xx.SetSickScanDataFormat(SickLMS5xx::SICK_LMS_5xx_SCAN_FORMAT_UNKNOWN);
+    unsigned int range_1_vals[SickLMS5xx::SICK_LMS_5XX_MAX_NUM_MEASUREMENTS];
+    //unsigned int range_2_vals[SickLMS5xx::SICK_LMS_5XX_MAX_NUM_MEASUREMENTS];
+    //sick_lms_5xx.SetSickScanFreqAndRes(SickLMS5xx::SICK_LMS_5XX_SCAN_FREQ_25,
+    //SickLMS5xx::SICK_LMS_5XX_SCAN_RES_25);
+    //sick_lms_5xx.SetSickScanDataFormat(SickLMS5xx::SICK_LMS_5XX_DIST_DOUBLE_PULSE,
+    //				         SickLMS5xx::SICK_LMS_5XX_REFLECT_NONE);
+    sick_lms_5xx.SetSickScanDataFormat(SickLMS5xx::SICK_LMS_5XX_SCAN_FORMAT_UNKNOWN);
     for (int i = 0; i < 1000; i++) {
       sick_lms_5xx.GetSickMeasurements(range_1_vals, NULL, NULL, NULL, NULL,
                                        range_1_vals, NULL, NULL, NULL, NULL,
