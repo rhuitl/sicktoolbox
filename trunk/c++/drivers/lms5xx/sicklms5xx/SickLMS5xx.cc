@@ -1667,7 +1667,7 @@ namespace SickToolbox {
     }
 
     /* Success! */
-    _sick_streaming = true;
+    _sick_streaming = start ? true : false;
     
   }
   /*
