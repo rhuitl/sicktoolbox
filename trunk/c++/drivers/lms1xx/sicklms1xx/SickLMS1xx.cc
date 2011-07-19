@@ -157,7 +157,7 @@ namespace SickToolbox {
 
       /* Is the device streaming? */
       if (_sick_streaming) {
-	_stopStreamingMeasurements();
+	_startStopStreamingMeasurements(false);
       }
 
       /* Set the desired configuration */
@@ -273,7 +273,7 @@ namespace SickToolbox {
       
       /* Is the device streaming? */
       if (_sick_streaming ) {
-	_stopStreamingMeasurements();
+	_startStopStreamingMeasurements(false);
       }
 
       std::cout << "\t*** Setting scan format " << _sickScanDataFormatToString(scan_format) << "..." << std::endl;
@@ -552,7 +552,7 @@ namespace SickToolbox {
 
       /* Is the device streaming? */
       if (_sick_streaming) {
-	_stopStreamingMeasurements(disp_banner);
+	_startStopStreamingMeasurements(false);
       }
       
       /* Attempt to cancel the buffer monitor */
@@ -1164,7 +1164,10 @@ namespace SickToolbox {
     try {
 
       /* Send message and get reply */
-      _sendMessageAndGetReply(send_message, recv_message, "sAN", "mLMPsetscancfg");
+      // Use a very long timeout (15s) because upon first use of "mLMPsetscancfg" after power-on,
+      // the LMS5xx indicator LED goes red, but will turn green after 10-12 seconds. Looks like the
+      // device is restarting once...
+      _sendMessageAndGetReply(send_message, recv_message, "sAN", "mLMPsetscancfg", 15*1000*1000);
 
     }
         
@@ -1556,7 +1559,7 @@ namespace SickToolbox {
       _checkForMeasuringStatus();
       
       /* Request the data stream... */
-      _startStreamingMeasurements();
+      _startStopStreamingMeasurements(true);
       
     }
     
@@ -1588,9 +1591,9 @@ namespace SickToolbox {
   }
   
   /*
-   * \brief Start Streaming Values
+   * \brief Start or stop streaming values
    */
-  void SickLMS1xx::_startStreamingMeasurements( ) throw( SickTimeoutException, SickIOException ) {
+  void SickLMS1xx::_startStopStreamingMeasurements( bool start ) throw( SickTimeoutException, SickIOException ) {
 
     /* Allocate a single buffer for payload contents */
     uint8_t payload_buffer[SickLMS1xxMessage::MESSAGE_PAYLOAD_MAX_LENGTH] = {0};
@@ -1616,7 +1619,7 @@ namespace SickToolbox {
     payload_buffer[15] = ' ';
 
     /* Start streaming! */
-    payload_buffer[16] = '1';
+    payload_buffer[16] = start ? '1' : '0';
     
     /* Construct command message */
     SickLMS1xxMessage send_message(payload_buffer,17);
@@ -1627,10 +1630,12 @@ namespace SickToolbox {
     try {
 
       /* Send message and get reply */      
-      _sendMessageAndGetReply(send_message, recv_message, "sSN", "LMDscandata");
-
+      //_sendMessageAndGetReply(send_message, recv_message, "sSN", "LMDscandata");
+      // The "sEN LMDscandata" request is answered by a "sEA LMDscandata 1", and following that,
+      // continuous measurement output follows as "sSN LMDscandata".
+      _sendMessageAndGetReply(send_message, recv_message, "sEA", "LMDscandata");
     }
-        
+
     /* Handle a timeout! */
     catch (SickTimeoutException &sick_timeout_exception) {
       std::cerr << sick_timeout_exception.what() << std::endl;
@@ -1645,81 +1650,20 @@ namespace SickToolbox {
     
     /* A safety net */
     catch (...) {
-      std::cerr << "SickLMS1xx::_startStreamingMeasurements: Unknown exception!!!" << std::endl;
+      std::cerr << "SickLMS1xx::_startStopStreamingMeasurements: Unknown exception!!!" << std::endl;
       throw;
+    }
+
+    /* Extract the message payload */
+    recv_message.GetPayload(payload_buffer);
+
+    /* Check if it worked... */
+    if (payload_buffer[16] != (start ? '1' : '0')) {
+      throw SickConfigException("SickLMS1xx::_startStopStreamingMeasurements: Unable to start measuring!");
     }
 
     /* Success! */
     _sick_streaming = true;
-    
-  }
-
-  /**
-   * \brief Stop Measurment Stream
-   */
-  void SickLMS1xx::_stopStreamingMeasurements( const bool disp_banner ) throw( SickTimeoutException, SickIOException ) {
-
-    if (disp_banner) {
-      std::cout << "\tStopping data stream..." << std::endl;
-    }
-      
-    /* Allocate a single buffer for payload contents */
-    uint8_t payload_buffer[SickLMS1xxMessage::MESSAGE_PAYLOAD_MAX_LENGTH] = {0};
-    
-    /* Set the command type */
-    payload_buffer[0]  = 's';
-    payload_buffer[1]  = 'E';
-    payload_buffer[2]  = 'N';
-    payload_buffer[3]  = ' ';
-    
-    /* Set the command */
-    payload_buffer[4]  = 'L';
-    payload_buffer[5]  = 'M';
-    payload_buffer[6]  = 'D';
-    payload_buffer[7]  = 's';
-    payload_buffer[8]  = 'c';
-    payload_buffer[9]  = 'a';
-    payload_buffer[10] = 'n';
-    payload_buffer[11] = 'd';
-    payload_buffer[12] = 'a';
-    payload_buffer[13] = 't';
-    payload_buffer[14] = 'a';
-    payload_buffer[15] = ' ';
-
-    /* Start streaming! */
-    payload_buffer[16] = '0';
-    
-    /* Construct command message */
-    SickLMS1xxMessage send_message(payload_buffer,17);
-
-    /* Setup container for recv message */
-    SickLMS1xxMessage recv_message;
-
-    try {
-
-      /* Send message and get reply */      
-      _sendMessage(send_message);
-
-    }
-        
-    /* Handle write buffer exceptions */
-    catch (SickIOException &sick_io_exception) {
-      std::cerr << sick_io_exception.what() << std::endl;
-      throw;
-    }
-    
-    /* A safety net */
-    catch (...) {
-      std::cerr << "SickLMS1xx::_stopStreamingMeasurements: Unknown exception!!!" << std::endl;
-      throw;
-    }
-
-    /* Success! */
-    if (disp_banner) {
-      std::cout << "\t\tStream stopped!" << std::endl;
-    }
-    
-    _sick_streaming = false;
     
   }
 
@@ -2040,7 +1984,7 @@ namespace SickToolbox {
     try {
       
       /* Send a message using parent's method */
-      SickLIDAR< SickLMS1xxBufferMonitor, SickLMS1xxMessage >::_sendMessage(send_message,DEFAULT_SICK_LMS_1XX_BYTE_TIMEOUT);
+      SickLIDAR< SickLMS1xxBufferMonitor, SickLMS1xxMessage >::_sendMessage(send_message,0);
       
     }
     
@@ -2082,7 +2026,7 @@ namespace SickToolbox {
     try {
 
       /* Send a message and get reply using parent's method */
-      SickLIDAR< SickLMS1xxBufferMonitor, SickLMS1xxMessage >::_sendMessageAndGetReply(send_message,recv_message,(uint8_t *)expected_str.c_str(),expected_str.length(),DEFAULT_SICK_LMS_1XX_BYTE_TIMEOUT,timeout_value,num_tries);
+      SickLIDAR< SickLMS1xxBufferMonitor, SickLMS1xxMessage >::_sendMessageAndGetReply(send_message,recv_message,(uint8_t *)expected_str.c_str(),expected_str.length(),0,timeout_value,num_tries);
 
     }
     
