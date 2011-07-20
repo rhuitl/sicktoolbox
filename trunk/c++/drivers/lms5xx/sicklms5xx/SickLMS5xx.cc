@@ -2086,7 +2086,7 @@ namespace SickToolbox {
 
     /* Construct the expected string */
     std::string expected_str = reply_command_type + " " + reply_command;
-    std::cout << "Waiting for reply: " << expected_str << std::endl;
+    //std::cout << "Waiting for reply: " << expected_str << std::endl;
     
     try {
 
