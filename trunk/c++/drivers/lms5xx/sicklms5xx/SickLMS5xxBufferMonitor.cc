@@ -47,7 +47,8 @@ namespace SickToolbox {
     try {
 
       /* Flush the TCP receive buffer */
-      _flushTCPRecvBuffer();
+      // Don't flush! This is stupid. It causes races and makes the driver unreliable.
+      //_flushTCPRecvBuffer();
 
       /* Search for STX in the byte stream */
       do {
@@ -108,6 +109,8 @@ namespace SickToolbox {
     }
     
     /* Flush awaiting bytes */
+    if(num_bytes_waiting)
+      std::cerr << "FIXME: eating your data" << std::endl;
     for (int i = 0; i < num_bytes_waiting; i++) {
       
       /* Capture a single byte from the stream! */
