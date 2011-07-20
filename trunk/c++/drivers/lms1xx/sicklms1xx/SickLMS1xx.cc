@@ -1554,13 +1554,15 @@ namespace SickToolbox {
     std::cout << std::endl << "\tRequesting data stream..." << std::endl;
     
     try {
-      
       /* Wait for device to be measuring */
       _checkForMeasuringStatus();
       
+      /* Start the device, i.e., logout of configuration mode. If we stay logged in, the
+       * indicator LED on the LMS stays red. If we logout, it turns green. */
+      _restoreMeasuringMode();
+
       /* Request the data stream... */
       _startStopStreamingMeasurements(true);
-      
     }
     
     /* Handle config exceptions */
@@ -1717,7 +1719,7 @@ namespace SickToolbox {
       }
 
       /* Sleep a little bit */
-      usleep(1000);
+      usleep(1000*100);
       
       /* Check whether the allowed time has expired */
       gettimeofday(&end_time,NULL);    
@@ -1889,7 +1891,7 @@ namespace SickToolbox {
   }
   
   /**
-   * Set device to output only range values
+   * Restore device to measuring mode, i.e., logout of configuration mode
    */
   void SickLMS1xx::_restoreMeasuringMode( ) throw( SickTimeoutException, SickIOException ) {
 
@@ -1916,7 +1918,7 @@ namespace SickToolbox {
     try {
 
       /* Send message and get reply */      
-      _sendMessageAndGetReply(send_message, recv_message, "sWA", "LMDscandatacfg");
+      _sendMessageAndGetReply(send_message, recv_message, "sAN", "Run");
 
     }
         
@@ -1942,8 +1944,8 @@ namespace SickToolbox {
     recv_message.GetPayload(payload_buffer);
     
     /* Check return value */
-    if (payload_buffer[8] != '0') {
-      std::cerr << "SickLMS1xx::_restoreMeasuringMode: Unknown exception!!!" << std::endl;
+    if (payload_buffer[8] != '1') {
+      std::cerr << "SickLMS1xx::_restoreMeasuringMode: run-requested returned " << payload_buffer[8] << std::endl;
       throw;
     }
 

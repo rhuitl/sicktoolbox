@@ -266,7 +266,7 @@ namespace SickToolbox {
     /** Sets the sick scan data format */
     void _setSickScanDataFormat( const sick_lms_1xx_scan_format_t scan_format ) throw( SickTimeoutException, SickIOException, SickThreadException, SickErrorException );
     
-    /** Restore device to measuring mode */
+    /** Restore device to measuring mode, i.e., logout of configuration mode */
     void _restoreMeasuringMode( ) throw( SickTimeoutException, SickIOException );
 
     /** Ensures a feasible scan area */
