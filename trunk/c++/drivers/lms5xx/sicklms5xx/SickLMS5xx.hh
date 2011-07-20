@@ -282,9 +282,6 @@ namespace SickToolbox {
     /** Stop device measuring */
     void _stopMeasuring( ) throw ( SickTimeoutException, SickIOException );
 
-    /** Start the device / logout */
-    void _startDevice( ) throw ( SickTimeoutException, SickIOException );
-
     /** Request a data data stream type */
     void _requestDataStream( ) throw ( SickTimeoutException, SickConfigException, SickIOException );
     
@@ -300,7 +297,7 @@ namespace SickToolbox {
     /** Sets the Sick LMS 5xx echo filter mode */
     void _setSickEchoFilter(sick_lms_5xx_echo_filter_t echo_filter) throw( SickTimeoutException, SickIOException, SickErrorException );
     
-    /** Restore device to measuring mode */
+    /** Restore device to measuring mode, i.e., logout of configuration mode */
     void _restoreMeasuringMode( ) throw( SickTimeoutException, SickIOException );
 
     /** Ensures a feasible scan area */

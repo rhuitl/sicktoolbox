@@ -1557,11 +1557,12 @@ namespace SickToolbox {
     std::cout << std::endl << "\tRequesting data stream..." << std::endl;
     
     try {
-      /* Start the device, i.e., "The device is returned to the measurement mode after configuration" */
-      _startDevice();
-      
       /* Wait for device to be measuring */
       _checkForMeasuringStatus();
+
+      /* Start the device, i.e., logout of configuration mode. If we stay logged in, the
+       * indicator LED on the LMS stays red. If we logout, it turns green. */
+      _restoreMeasuringMode();
       
       /* Request the data stream... */
       _startStopStreamingMeasurements(true);
@@ -1670,54 +1671,6 @@ namespace SickToolbox {
     _sick_streaming = start ? true : false;
     
   }
-  /*
-   * \brief Start Streaming Values
-   */
-  void SickLMS5xx::_startDevice( ) throw( SickTimeoutException, SickIOException ) {
-
-    /* Allocate a single buffer for payload contents */
-    uint8_t payload_buffer[SickLMS5xxMessage::MESSAGE_PAYLOAD_MAX_LENGTH] = {0};
-
-    /* Set the command type */
-    payload_buffer[0]  = 's';
-    payload_buffer[1]  = 'M';
-    payload_buffer[2]  = 'N';
-    payload_buffer[3]  = ' ';
-
-    /* Set the command */
-    payload_buffer[4]  = 'R';
-    payload_buffer[5]  = 'u';
-    payload_buffer[6]  = 'n';
-
-    /* Construct command message */
-    SickLMS5xxMessage send_message(payload_buffer,7);
-
-    /* Setup container for recv message */
-    SickLMS5xxMessage recv_message;
-
-    try {
-      /* Send message and get reply */
-      _sendMessageAndGetReply(send_message, recv_message, "sAN", "Run");
-    }
-
-    /* Handle a timeout! */
-    catch (SickTimeoutException &sick_timeout_exception) {
-      std::cerr << sick_timeout_exception.what() << std::endl;
-      throw;
-    }
-
-    /* Handle write buffer exceptions */
-    catch (SickIOException &sick_io_exception) {
-      std::cerr << sick_io_exception.what() << std::endl;
-      throw;
-    }
-
-    /* A safety net */
-    catch (...) {
-      std::cerr << "SickLMS5xx::_startDevice: Unknown exception!!!" << std::endl;
-      throw;
-    }
-  }
 
   /**
    * \brief Attempts to set and waits until device has in measuring status
@@ -1769,7 +1722,7 @@ namespace SickToolbox {
       }
 
       /* Sleep a little bit */
-      usleep(1000);
+      usleep(1000*100);
       
       /* Check whether the allowed time has expired */
       gettimeofday(&end_time,NULL);    
@@ -1996,7 +1949,7 @@ namespace SickToolbox {
   }
 
   /**
-   * Set device to output only range values
+   * Restore device to measuring mode, i.e., logout of configuration mode
    */
   void SickLMS5xx::_restoreMeasuringMode( ) throw( SickTimeoutException, SickIOException ) {
 
@@ -2023,7 +1976,7 @@ namespace SickToolbox {
     try {
 
       /* Send message and get reply */      
-      _sendMessageAndGetReply(send_message, recv_message, "sWA", "LMDscandatacfg");
+      _sendMessageAndGetReply(send_message, recv_message, "sAN", "Run");
 
     }
         
@@ -2049,8 +2002,8 @@ namespace SickToolbox {
     recv_message.GetPayload(payload_buffer);
     
     /* Check return value */
-    if (payload_buffer[8] != '0') {
-      std::cerr << "SickLMS5xx::_restoreMeasuringMode: Unknown exception!!!" << std::endl;
+    if (payload_buffer[8] != '1') {
+      std::cerr << "SickLMS5xx::_restoreMeasuringMode: run-requested returned " << payload_buffer[8] << std::endl;
       throw;
     }
 
