@@ -539,7 +539,11 @@ namespace SickToolbox {
       if (_sick_streaming) {
         _startStopStreamingMeasurements(false /*disp_banner*/);
       }
-      
+
+      /* Stop measuring to turn off motor and laser */
+      _setAuthorizedClientAccessMode();  // need to login to be able to stop measuring
+      _stopMeasuring();
+
       /* Attempt to cancel the buffer monitor */
       if (disp_banner) {
         std::cout << "\tAttempting to cancel buffer monitor..." << std::endl;
