@@ -554,7 +554,11 @@ namespace SickToolbox {
       if (_sick_streaming) {
 	_startStopStreamingMeasurements(false);
       }
-      
+
+      /* Stop measuring to turn off motor and laser */
+      _setAuthorizedClientAccessMode();  // need to login to be able to stop measuring
+      _stopMeasuring();
+
       /* Attempt to cancel the buffer monitor */
       if (disp_banner) {
 	std::cout << "\tAttempting to cancel buffer monitor..." << std::endl;
@@ -1630,11 +1634,9 @@ namespace SickToolbox {
     SickLMS1xxMessage recv_message;
 
     try {
-
-      /* Send message and get reply */      
-      //_sendMessageAndGetReply(send_message, recv_message, "sSN", "LMDscandata");
-      // The "sEN LMDscandata" request is answered by a "sEA LMDscandata 1", and following that,
-      // continuous measurement output follows as "sSN LMDscandata".
+      /* Send message and get reply
+       * The "sEN LMDscandata" request is answered by a "sEA LMDscandata 1", and following that,
+       * continuous measurement output follows as "sSN LMDscandata". */
       _sendMessageAndGetReply(send_message, recv_message, "sEA", "LMDscandata");
     }
 
