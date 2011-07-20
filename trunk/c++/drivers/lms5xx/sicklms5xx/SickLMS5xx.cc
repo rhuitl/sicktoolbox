@@ -1567,7 +1567,7 @@ namespace SickToolbox {
       /* Start the device, i.e., logout of configuration mode. If we stay logged in, the
        * indicator LED on the LMS stays red. If we logout, it turns green. */
       _restoreMeasuringMode();
-      
+
       /* Request the data stream... */
       _startStopStreamingMeasurements(true);
     }
@@ -1692,7 +1692,7 @@ namespace SickToolbox {
     _updateSickStatus( );
 
     /* Check the shared object */
-    bool first_pass = true;
+    bool first_pass = true, measuring_forced = false;
     while( _sick_device_status != SICK_LMS_5XX_STATUS_READY_FOR_MEASUREMENT ) {
 
       if (first_pass) {
@@ -1736,6 +1736,13 @@ namespace SickToolbox {
 
       /* Grab the latest device status */
       _updateSickStatus();
+
+      if(_sick_device_status == SICK_LMS_5XX_STATUS_READY && !measuring_forced) {
+        // Ready but not measuring
+        _restoreMeasuringMode();
+        measuring_forced = true;
+        std::cout << "Forcing measurements" << std::endl;
+      }
 
     }
 
