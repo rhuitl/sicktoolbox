@@ -19,4 +19,5 @@ library_include_HEADERS=$(lib_include_hh)
 
 lib_LTLIBRARIES=libsicklms2xx.la
 libsicklms2xx_la_SOURCES=$(hh_sources) $(cc_sources)
+libsicklms2xx_la_LIBADD=-lpthread
 AM_CPPFLAGS=-I$(top_srcdir)/c++/drivers/base/src
