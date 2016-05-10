@@ -17,6 +17,7 @@
 #define SICK_BUFFER_MONITOR
 
 /* Dependencies */
+#include <unistd.h>
 #include <iostream>
 #include <pthread.h>
 #include "SickException.hh"
